@@ -5,5 +5,5 @@ from core.apps.products.models import Product
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'created_at', 'updated_at', )
+    list_display = ('id', 'title', 'created_at', 'updated_at', 'is_visible',)
     
