@@ -10,5 +10,3 @@ class PaginationOut(Schema):
     offset: int
     limit: int
     total: int
-
-    

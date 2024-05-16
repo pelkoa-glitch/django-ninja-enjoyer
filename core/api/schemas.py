@@ -1,7 +1,12 @@
-from typing import Any, Generic, TypeVar
+from typing import (
+    Any,
+    Generic,
+    TypeVar,
+)
+
+from ninja import Schema
 
 from pydantic import Field
-from ninja import Schema
 
 from core.api.filters import PaginationOut
 
