@@ -19,9 +19,16 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "core.project.settings.local"
+
+
 [tool.poetry.group.dev.dependencies]
 isort = "^5.13.2"
 pre-commit = "^3.7.1"
+faker = "^25.2.0"
+pytest-django = "^4.8.0"
+factory-boy = "^3.3.0"
 
 
 [tool.isort]

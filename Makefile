@@ -26,7 +26,7 @@ storages-logs:
 
 .PHONY: app
 app:
-	${DC} -f ${APP_FILE} -f ${STORAGES_FILE} ${ENV} up --build -d
+	${DC} -f ${APP_FILE} ${env} -f ${STORAGES_FILE} ${ENV} up --build -d
 
 .PHONY: app-logs
 app-logs:
@@ -51,3 +51,7 @@ superuser:
 .PHONY: collectstatic
 collectstatic:
 	${EXEC} ${APP_CONTAINER} ${MANAGE_PY} collectstatic		
+
+.PHONY: run-test	
+run-test:
+	${EXEC} ${APP_CONTAINER} pytest
