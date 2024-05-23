@@ -55,3 +55,7 @@ collectstatic:
 .PHONY: run-test	
 run-test:
 	${EXEC} ${APP_CONTAINER} pytest
+
+.PHONY: console-mainapp
+console-mainapp:
+	${EXEC} ${APP_CONTAINER} ash
