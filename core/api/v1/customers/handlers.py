@@ -35,7 +35,7 @@ def auth_handler(request: HttpRequest, schema: AuthInSchema) -> ApiResponse[Auth
 def get_token_handler(request: HttpRequest, schema: TokenInSchema) -> ApiResponse[TokenOutSchema]:
     container = get_container()
 
-    service = container.resolve(BaseAuthService)
+    service: BaseAuthService = container.resolve(BaseAuthService)
 
     try:
         token = service.confirm(schema.code, schema.phone)

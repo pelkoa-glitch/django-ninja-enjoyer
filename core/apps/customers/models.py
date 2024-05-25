@@ -3,7 +3,7 @@ from uuid import uuid4
 from django.db import models
 
 from core.apps.common.models import TimedBaseModel
-from core.apps.customers.entities.entities import CustomerEntity
+from core.apps.customers.entities.customers import Customer
 
 
 class Customer(TimedBaseModel):
@@ -19,8 +19,8 @@ class Customer(TimedBaseModel):
         unique=True,
     )
 
-    def to_entity(self) -> CustomerEntity:
-        return CustomerEntity(phone=self.phone, created_at=self.created_at)
+    def to_entity(self) -> Customer:
+        return Customer(phone=self.phone, created_at=self.created_at)
 
     def __str__(self):
         return self.phone
