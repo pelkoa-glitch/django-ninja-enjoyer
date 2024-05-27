@@ -10,3 +10,13 @@ class ReviewInvalidRating(ServiceException):
     @property
     def message(self):
         return 'Rating is invalid'
+
+
+@dataclass(eq=False)
+class SingleReviewError(ServiceException):
+    product_id: int
+    customer_id: int
+
+    @property
+    def message(self):
+        return 'Only one review allowed per product'

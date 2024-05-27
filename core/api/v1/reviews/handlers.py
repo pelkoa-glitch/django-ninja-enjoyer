@@ -34,6 +34,6 @@ def create_review(
             review=schema.to_entity(),
         )
     except ServiceException as error:
-        raise HttpError(statis_code=400, message=error.message)
+        raise HttpError(status_code=400, message=error.message)
 
     return ApiResponse(data=ReviewOutSchema.from_entity(result))
