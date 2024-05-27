@@ -19,7 +19,6 @@ class Product(TimedBaseModel):
     )
 
     def to_entity(self) -> ProductEntity:
-
         return ProductEntity(
             id=self.id,
             title=self.title,
