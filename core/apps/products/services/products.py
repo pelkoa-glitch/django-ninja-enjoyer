@@ -51,6 +51,6 @@ class ORMProductService(BaseProductService):
         try:
             product_dto = ProductModel.objects.get(pk=product_id)
         except ProductModel.DoesNotExist:
-            raise ProductNotFound(product_is=product_id)
+            raise ProductNotFound(product_id=product_id)
 
         return product_dto.to_entity()

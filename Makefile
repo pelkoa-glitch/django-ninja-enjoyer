@@ -1,12 +1,13 @@
 DC = docker compose
 STORAGES_FILE = docker_compose/storages.yaml
 EXEC = docker exec -it
-DB_CONTAINER = enjoyer-db	
+DB_CONTAINER = enjoyer-db
 LOGS = docker logs
 ENV = --env-file .env
 APP_FILE = docker_compose/app.yaml
 APP_CONTAINER = main-app
 MANAGE_PY = python manage.py
+MONITORING_FILE = docker_compose/monitoring.yaml
 
 .PHONY: storages
 storages:
@@ -14,7 +15,7 @@ storages:
 
 .PHONY: storages-down
 storages-down:
-	${DC} -f ${STORAGES_FILE} ${ENV} down 
+	${DC} -f ${STORAGES_FILE} ${ENV} down
 
 .PHONY: postgres
 postgres:
@@ -30,15 +31,27 @@ app:
 
 .PHONY: app-logs
 app-logs:
-	${LOGS} ${APP_CONTAINER} -f	
+	${LOGS} ${APP_CONTAINER} -f
 
 .PHONY: app-down
 app-down:
-	${DC} -f ${APP_FILE} -f ${STORAGES_FILE}  ${ENV} down 
+	${DC} -f ${APP_FILE} -f ${STORAGES_FILE}  ${ENV} down
+
+.PHONY: monitoring-logs
+monitoring-logs:
+	${DC} -f ${MONITORING_FILE} ${ENV} logs -f
+
+.PHONY: monitoring
+monitoring:
+	${DC} -f ${MONITORING_FILE} ${ENV} up --build -d
+
+.PHONY: monitoring-down
+monitoring-down:
+	${DC} -f ${MONITORING_FILE} ${ENV} down
 
 .PHONY: migrate
 migrate:
-	${EXEC} ${APP_CONTAINER} ${MANAGE_PY} migrate	
+	${EXEC} ${APP_CONTAINER} ${MANAGE_PY} migrate
 
 .PHONY: makemigrations
 makemigrations:
@@ -46,13 +59,13 @@ makemigrations:
 
 .PHONY: superuser
 superuser:
-	${EXEC} ${APP_CONTAINER} ${MANAGE_PY} createsuperuser	
+	${EXEC} ${APP_CONTAINER} ${MANAGE_PY} createsuperuser
 
 .PHONY: collectstatic
 collectstatic:
-	${EXEC} ${APP_CONTAINER} ${MANAGE_PY} collectstatic		
+	${EXEC} ${APP_CONTAINER} ${MANAGE_PY} collectstatic
 
-.PHONY: run-test	
+.PHONY: run-test
 run-test:
 	${EXEC} ${APP_CONTAINER} pytest
 
