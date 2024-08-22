@@ -26,9 +26,13 @@ class BaseProductService(ABC):
     def get_by_id(self, product_id: int) -> int:
         ...
 
+    @abstractmethod
+    def get_all_products(self) -> Iterable[Product]:
+        ...
+
 
 class ORMProductService(BaseProductService):
-    def _builq_get_product_querry(self, filters: ProductFilters) -> Q:
+    def _build_get_product_querry(self, filters: ProductFilters) -> Q:
         query = Q(is_visible=True)
 
         if filters.search is not None:
@@ -37,13 +41,13 @@ class ORMProductService(BaseProductService):
         return query
 
     def get_product_list(self, filters: ProductFilters, pagination: PaginationIn) -> Iterable[Product]:
-        query = self._builq_get_product_querry(filters)
+        query = self._build_get_product_querry(filters)
         qs = ProductModel.objects.filter(query)[pagination.offset:pagination.offset+pagination.limit]
 
         return [product.to_entity() for product in qs]
 
     def get_product_count(self, filters: ProductFilters) -> int:
-        query = self._builq_get_product_querry(filters)
+        query = self._build_get_product_querry(filters)
 
         return ProductModel.objects.filter(query).count()
 
@@ -54,3 +58,10 @@ class ORMProductService(BaseProductService):
             raise ProductNotFound(product_id=product_id)
 
         return product_dto.to_entity()
+
+    def get_all_products(self) -> Iterable[Product]:
+        query = self._build_get_product_querry(ProductFilters())
+        queryset = ProductModel.objects.filter(query)
+
+        for product in queryset:
+            yield product.to_entity()

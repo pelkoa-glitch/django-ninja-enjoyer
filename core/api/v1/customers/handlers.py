@@ -10,7 +10,8 @@ from core.api.v1.customers.schemas import (
     TokenOutSchema,
 )
 from core.apps.common.exceptions import ServiceException
-from core.apps.customers.services.auth import BaseAuthService
+from core.apps.customers.use_cases.auth.authorize import AuthorizeCustomerUseCase
+from core.apps.customers.use_cases.auth.confirm_authorization import ConfirmAuthorizationCustomerUseCase
 from core.project.containers import get_container
 
 
@@ -20,9 +21,10 @@ router = Router(tags=['Customers'])
 @router.post('auth', response=ApiResponse[AuthOutSchema], operation_id='authorize')
 def auth_handler(request: HttpRequest, schema: AuthInSchema) -> ApiResponse[AuthOutSchema]:
     container = get_container()
-    service = container.resolve(BaseAuthService)
 
-    service.authorize(schema.phone)
+    use_case: AuthorizeCustomerUseCase = container.resolve(AuthorizeCustomerUseCase)
+
+    use_case.authorize(schema.phone)
 
     return ApiResponse(
         data=AuthOutSchema(
@@ -35,10 +37,10 @@ def auth_handler(request: HttpRequest, schema: AuthInSchema) -> ApiResponse[Auth
 def get_token_handler(request: HttpRequest, schema: TokenInSchema) -> ApiResponse[TokenOutSchema]:
     container = get_container()
 
-    service: BaseAuthService = container.resolve(BaseAuthService)
+    use_case: ConfirmAuthorizationCustomerUseCase = container.resolve(ConfirmAuthorizationCustomerUseCase)
 
     try:
-        token = service.confirm(schema.code, schema.phone)
+        token = use_case.confirm(schema.code, schema.phone)
     except ServiceException as exception:
         raise HttpError(
             status_code=400,
