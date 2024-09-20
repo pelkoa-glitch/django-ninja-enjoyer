@@ -55,6 +55,14 @@ def get_container() -> punq.Container:
 def _initialize_container() -> punq.Container:
     container = punq.Container()
 
+    def build_validators() -> BaseReviewValidatorService:
+        return ComposerReviewValidatorService(
+            validators=[
+                container.resolve(SingleReviewValidatorService),
+                container.resolve(ReviewRatingValidatorService),
+            ],
+        )
+
     def build_elastic_search_service() -> BaseProductSearchService:
         return ElasticProductSearchService(
             client=ElasticClient(
@@ -70,13 +78,6 @@ def _initialize_container() -> punq.Container:
     container.register(BaseProductService, ORMProductService)
     container.register(BaseReviewService, ORMReviewService)
 
-    def build_validators() -> BaseReviewValidatorService:
-        return ComposerReviewValidatorService(
-            validators=[
-                container.resolve(SingleReviewValidatorService),
-                container.resolve(ReviewRatingValidatorService),
-            ],
-        )
     container.register(SingleReviewValidatorService)
     container.register(ReviewRatingValidatorService)
     container.register(BaseProductSearchService, factory=build_elastic_search_service)
