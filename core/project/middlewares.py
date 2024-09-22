@@ -43,7 +43,6 @@ class ElasticApmMiddleware:
         except json.JSONDecodeError:
             response_body = response.content
         except AttributeError:
-            # TODO: Сделать нормально для WhiteNois'а через streaming_content
             response_body = ""
         elasticapm.set_context(data={"response_body": response_body})
 
